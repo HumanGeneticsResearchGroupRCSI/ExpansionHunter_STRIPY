@@ -34,7 +34,7 @@
 
 
 # ============================================================================
-# USER CONFIGURATION — Edit these paths
+# USER CONFIGURATION - Edit these paths
 # ============================================================================
 
 PROJECT_DIR="/path/to/TT"
@@ -56,7 +56,7 @@ REGIONS_BED="/path/toreference/repeat_regions.bed"
 LOCUS_REF="/path/toreference/stripy_locus_reference.json"
 HPO_FILE="/path/toresources/hpo_genes_to_phenotype.txt"
 # Override per project: set to hpo_renal_terms.txt, hpo_cf_terms.txt etc.
-HPO_FILTER_FILE="/path/toresources/hpo_epilepsy_terms.txt"
+# HPO_FILTER_FILE="/path/toresources/hpo_epilepsy_terms.txt"
 COHORT_ID="LH_WES"
 
 # ============================================================================
@@ -100,7 +100,7 @@ mkdir -p "${OUTDIR}/pipeline_info"
 # ============================================================================
 
 echo "================================================================"
-echo "  ExpansionHunter Pipeline — Pre-flight Checks"
+echo "  ExpansionHunter Pipeline - Pre-flight Checks"
 echo "================================================================"
 echo "  SLURM job ID    : ${SLURM_JOB_ID}"
 echo "  Node            : $(hostname)"
@@ -114,7 +114,7 @@ echo "  Output dir      : ${OUTDIR}"
 echo "================================================================"
 
 fail=0
-for f in "${PED}" "${REFERENCE}" "${VARIANT_CATALOG}" "${BAM_DIR}" "${PIPELINE_DIR}/main.nf"        "${LOCUS_REF}" "${HPO_FILE}" "${HPO_FILTER_FILE}" "${REGIONS_BED}"; do
+for f in "${PED}" "${REFERENCE}" "${VARIANT_CATALOG}" "${BAM_DIR}" "${PIPELINE_DIR}/main.nf"        "${LOCUS_REF}" "${HPO_FILE}" "${REGIONS_BED}"; do
     if [[ ! -e "${f}" ]]; then
         echo "[ERROR] Not found: ${f}"
         fail=1
@@ -141,7 +141,6 @@ echo ""
 echo "[INFO] Regions BED        : ${REGIONS_BED}"
 echo "[INFO] STRipy locus ref   : ${LOCUS_REF}"
 echo "[INFO] HPO file           : ${HPO_FILE}"
-echo "[INFO] HPO filter file    : ${HPO_FILTER_FILE}"
 echo "[INFO] Cohort ID          : ${COHORT_ID}"
 echo ""
 
@@ -164,7 +163,6 @@ nextflow run "${PIPELINE_DIR}/main.nf" \
     --outdir          "${OUTDIR}" \
     --stripy_locus_ref  "${LOCUS_REF}" \
     --hpo_file          "${HPO_FILE}" \
-    --hpo_filter_file   "${HPO_FILTER_FILE}" \
     --cohort_id         "${COHORT_ID}" \
     --regions_bed       "${REGIONS_BED}"
 

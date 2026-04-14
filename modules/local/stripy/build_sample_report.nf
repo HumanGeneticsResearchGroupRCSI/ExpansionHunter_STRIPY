@@ -1,6 +1,6 @@
 /*
 ========================================================================================
-    STRIPY — BUILD SAMPLE REPORT
+    STRIPY - BUILD SAMPLE REPORT
 ========================================================================================
     Generate per-sample STR annotation TSV by combining:
       - STRipy-annotated VCF

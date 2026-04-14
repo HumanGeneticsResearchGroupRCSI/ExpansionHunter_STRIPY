@@ -25,7 +25,7 @@ Notes
 -----
     - Only canonical chromosomes (chr1-22, chrX, chrY, chrM) are included
     - ReferenceRegion format: 'chrN:start-end' (0-based) or list of same
-    - RFC1 appears as RFC1:AAGGG and RFC1:ACAGG — same coords → deduplicated
+    - RFC1 appears as RFC1:AAGGG and RFC1:ACAGG - same coords → deduplicated
     - Padding is applied symmetrically; start clamped to 0
 
 Version: 1.0.0
@@ -43,7 +43,7 @@ CANONICAL_CHROMS = set(
 
 def parse_reference_region(region) -> list:
     """
-    Parse ReferenceRegion field — handles both string and list formats.
+    Parse ReferenceRegion field - handles both string and list formats.
     Returns list of (chrom, start, end) tuples (0-based, half-open).
 
     Examples:
@@ -64,7 +64,7 @@ def parse_reference_region(region) -> list:
             end   = int(end_str)
             result.append((chrom, start, end))
         except (ValueError, AttributeError):
-            print(f"[WARN] Cannot parse ReferenceRegion: {r!r} — skipping",
+            print(f"[WARN] Cannot parse ReferenceRegion: {r!r} - skipping",
                   file=sys.stderr)
     return result
 
@@ -84,7 +84,7 @@ def merge_intervals(intervals: list) -> list:
     for chrom, start, end in sorted_ivs[1:]:
         last_chrom, last_start, last_end = merged[-1]
         if chrom == last_chrom and start <= last_end:
-            # Overlapping or adjacent — extend
+            # Overlapping or adjacent - extend
             merged[-1] = (last_chrom, last_start, max(last_end, end))
         else:
             merged.append((chrom, start, end))
@@ -130,7 +130,7 @@ def main():
         ref_region = entry.get('ReferenceRegion')
 
         if not ref_region:
-            print(f"[WARN] No ReferenceRegion for locus {locus_id} — skipping",
+            print(f"[WARN] No ReferenceRegion for locus {locus_id} - skipping",
                   file=sys.stderr)
             skipped += 1
             continue
@@ -145,7 +145,7 @@ def main():
                 skipped += 1
                 continue
 
-            # Apply padding — clamp start to 0
+            # Apply padding - clamp start to 0
             padded_start = max(0, start - args.padding)
             padded_end   = end + args.padding
 

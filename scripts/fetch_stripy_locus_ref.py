@@ -31,7 +31,7 @@ STRIPY_API     = "https://api.stripy.org"
 API_TIMEOUT    = 15
 API_RETRY      = 3
 API_RETRY_WAIT = 5
-POLITE_DELAY   = 0.25   # seconds between requests — avoid rate limiting
+POLITE_DELAY   = 0.25   # seconds between requests - avoid rate limiting
 
 # VCF REPID → Stripy API locus ID normalisation
 LOCUS_ID_MAP = {
@@ -92,7 +92,7 @@ def main():
     # ── Check if already exists ───────────────────────────────────────────
     if out_path.exists():
         print(f"[INFO] Locus reference already exists: {out_path}")
-        print(f"[INFO] Skipping download — delete file to force refresh")
+        print(f"[INFO] Skipping download - delete file to force refresh")
         sys.exit(0)
 
     # ── Load catalog ──────────────────────────────────────────────────────
@@ -104,7 +104,7 @@ def main():
     with open(catalog_path) as f:
         catalog = json.load(f)
 
-    # Extract unique locus IDs — deduplicate RFC1 variants
+    # Extract unique locus IDs - deduplicate RFC1 variants
     seen     = set()
     locus_ids = []
     for entry in catalog:
@@ -172,10 +172,10 @@ def main():
     print(f"{'='*60}")
 
     if errors > 0:
-        print(f"\n[WARN] {errors} loci failed to fetch — check log file")
+        print(f"\n[WARN] {errors} loci failed to fetch - check log file")
         sys.exit(1)
 
-    print(f"\n[INFO] Done — reference file ready for pipeline use")
+    print(f"\n[INFO] Done - reference file ready for pipeline use")
 
 
 if __name__ == '__main__':

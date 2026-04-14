@@ -135,7 +135,7 @@ def resolve_bam_files(sample_id, bam_dir, bam_suffix) {
         bai = file("${bam_dir}/${sample_id}${stem}.bai")
     }
     if (!bai.exists()) {
-        log.warn "[BAI] Index not found for ${bam.name} — will create with samtools index"
+        log.warn "[BAI] Index not found for ${bam.name} - will create with samtools index"
         bai = null
     }
 
@@ -189,7 +189,7 @@ workflow {
         Channel.value(file("${params.fasta}.fai"))
     ch_catalog   = Channel.value(file(params.variant_catalog))
 
-    // Repeat regions BED — single file broadcast to all extract jobs
+    // Repeat regions BED - single file broadcast to all extract jobs
     ch_regions_bed = Channel.value(file(params.regions_bed))
 
     // ── Index BAM files if needed ─────────────────────────────────────────
@@ -215,14 +215,14 @@ workflow {
     )
 
     // ── Index realigned BAM using samtools container ───────────────────────
-    // expansionhunter.sif does not include samtools — index separately
+    // expansionhunter.sif does not include samtools - index separately
     // filter() ensures this only runs for samples that produced a realigned BAM
     SAMTOOLS_INDEX_REALIGNED(
         EXPANSIONHUNTER.out.realigned_bam
     )
 
     // ── Generate completion manifest ──────────────────────────────────────
-    // collectFile is a Nextflow operator — no process/container needed
+    // collectFile is a Nextflow operator - no process/container needed
     // Writes one row per sample as they complete, header seeded once
     EXPANSIONHUNTER.out.json
         .map { meta, json ->

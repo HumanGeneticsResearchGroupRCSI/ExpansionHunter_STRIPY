@@ -11,7 +11,7 @@ Generate a per-sample STR annotation TSV report by combining:
   5. All sample VCFs directory             (parent REPCN lookup for DeNovo)
   6. Live Stripy /compare API              (called loci only)
 
-Output: per-sample TSV — one row per disease per locus.
+Output: per-sample TSV - one row per disease per locus.
 
 Usage
 -----
@@ -51,15 +51,15 @@ LOCUS_ID_MAP = {
 }
 
 OUTPUT_COLUMNS = [
-    # Section A — positional + EH
+    # Section A - positional + EH
     "SampleID",
     "Chr", "Start", "End", "LocationCoordinates",
     "Ref", "Alt",
     "GT", "LocusCov", "RepeatLength",
     "FilterStatus", "CallStatus", "CallQuality",
-    # Section A — locus identity
+    # Section A - locus identity
     "Locus", "LocationRegion", "RepeatType", "Motif",
-    # Section A — clinical ranges + disease
+    # Section A - clinical ranges + disease
     "Normal Range (Min)", "Normal Range (Max)",
     "IntermediateRange (Min)", "IntermediateRange (Max)",
     "PathogenicCutoff",
@@ -68,17 +68,17 @@ OUTPUT_COLUMNS = [
     "Stripy_Gene", "HPO_Gene",
     "HPO Phenotype",
     "HPO_Filtered",
-    # Section B — per-allele repeat counts
+    # Section B - per-allele repeat counts
     "Allele1_Repeats", "Allele2_Repeats",
-    # Section B — literature
+    # Section B - literature
     "Literature:DiseaseName",
     "Literature:Inheritance",
     "Allele1_Range", "Allele2_Range",
-    # Section B — per-allele population stats
+    # Section B - per-allele population stats
     "Allele1_Zscore", "Allele2_Zscore",
     "Allele1_Outlier", "Allele2_Outlier",
     "Allele1_Direction", "Allele2_Direction",
-    # Section C — per-allele DeNovo
+    # Section C - per-allele DeNovo
     "Allele1_DeNovo", "Allele1_DeNovo_Direction",
     "Allele2_DeNovo", "Allele2_DeNovo_Direction",
     "DeNovo_Status",
@@ -93,7 +93,7 @@ def normalise_locus_id(locus_id: str) -> str:
 
 
 def fmt(val) -> str:
-    """Serialise value for TSV output — handles list, None, bool."""
+    """Serialise value for TSV output - handles list, None, bool."""
     if val is None:
         return '.'
     if isinstance(val, list):
@@ -168,7 +168,7 @@ def parse_repcn(repcn_str: str):
 
 
 def read_vcf(vcf_path: str):
-    """Generator — yields parsed record dicts from a VCF file."""
+    """Generator - yields parsed record dicts from a VCF file."""
     with open(vcf_path) as f:
         for line in f:
             if line.startswith('#'):
@@ -244,7 +244,7 @@ def load_hpo_file(hpo_path: str) -> dict:
     """
     Load genes_to_phenotype.txt.
 
-    Indexed by disease_id ONLY (e.g. "OMIM:143100") — NOT by gene symbol.
+    Indexed by disease_id ONLY (e.g. "OMIM:143100") - NOT by gene symbol.
     This handles cases where Stripy's gene differs from HPO's gene for the
     same disease (e.g. ABCD3 vs LRP12 for OMIM:164310).
 
@@ -282,7 +282,7 @@ def load_hpo_file(hpo_path: str) -> dict:
 
 def get_hpo_terms(disease_omim: str, hpo_lookup: dict) -> tuple:
     """
-    Look up HPO terms by disease OMIM ID alone — gene symbol not used for matching.
+    Look up HPO terms by disease OMIM ID alone - gene symbol not used for matching.
 
     Returns (hpo_terms_string, hpo_gene_symbol):
         hpo_terms_string : '; '-separated "HP:XXXXXXX|Name" pairs, or '.'
@@ -312,7 +312,7 @@ def load_hpo_filter_file(filter_path: str) -> set:
         return set()
     p = Path(filter_path)
     if not p.exists():
-        print(f"[WARN] HPO filter file not found: {filter_path} — HPO_Filtered will be '.'",
+        print(f"[WARN] HPO filter file not found: {filter_path} - HPO_Filtered will be '.'",
               file=sys.stderr)
         return set()
     terms = set()
@@ -432,7 +432,7 @@ def get_family_type(sample_id: str, ped: dict) -> str:
 def load_parent_repcn(vcf_dir: str, parent_id: str) -> dict:
     """
     Load REPCN values for a parent sample from their Reannotated VCF.
-    Returns dict: {locus_id: (rep1, rep2)} — (None, None) for no-calls.
+    Returns dict: {locus_id: (rep1, rep2)} - (None, None) for no-calls.
     Returns {} if parent VCF not found.
     """
     if not parent_id or parent_id == '0':
@@ -533,7 +533,7 @@ def assess_allele_denovo(
     # ── TRIO ──────────────────────────────────────────────────────────────
     if family_type == 'TRIO':
         if father_status == 'no_call' or mother_status == 'no_call':
-            return '.'   # Undetermined — handled by shared DeNovo_Status
+            return '.'   # Undetermined - handled by shared DeNovo_Status
         if father_status == 'same_direction' or            mother_status == 'same_direction':
             return 'No'
         if father_status == 'within' and mother_status == 'within':
@@ -564,7 +564,7 @@ def assess_denovo_status(
     locus_id:     str,
 ) -> str:
     """
-    Assess shared DeNovo_Status — returns Undetermined_ParentNoCall
+    Assess shared DeNovo_Status - returns Undetermined_ParentNoCall
     if any relevant parent has a no-call at this locus.
     Only checked when proband has at least one outlier allele.
     """
@@ -633,7 +633,7 @@ def assess_denovo(
                 return a, 'HIGH'
             if a < nr_min:
                 return a, 'LOW'
-            return a, None   # within range — not a candidate
+            return a, None   # within range - not a candidate
         except (ValueError, TypeError):
             return None, None
 
@@ -674,7 +674,7 @@ def assess_denovo(
             ped_entry    = ped_entry,
         )
 
-    # Shared DeNovo_Status — parent no-call flag
+    # Shared DeNovo_Status - parent no-call flag
     # Only relevant if at least one allele is a candidate
     father_id = ped_entry.get('father_id', '0')
     mother_id = ped_entry.get('mother_id', '0')
@@ -713,7 +713,7 @@ def build_rows(
     father_repcn: dict,
     mother_repcn: dict,
 ) -> list:
-    """Build output rows for one VCF record — one row per linked disease."""
+    """Build output rows for one VCF record - one row per linked disease."""
 
     chrom = record['chrom']
     pos   = record['pos']
@@ -761,23 +761,23 @@ def build_rows(
         if meta_ok and dis_id and 'Diseases' in meta:
             d = meta['Diseases'].get(dis_id, {})
 
-            # Extract PathogenicCutoff first — needed for IR.Max derivation below
+            # Extract PathogenicCutoff first - needed for IR.Max derivation below
             path_cutoff  = d.get('PathogenicCutoff', '.')
             disease_omim = d.get('DiseaseOMIM',      '.')
             onset        = d.get('Onset',            '.')
 
-            # NormalRange — Max=0 with Min>0 is a Stripy DB quirk → keep as '.'
+            # NormalRange - Max=0 with Min>0 is a Stripy DB quirk → keep as '.'
             # Cannot safely derive NormalRange.Max from PathogenicCutoff alone
             nr = d.get('NormalRange') or {}
             nr_min = nr.get('Min', '.')
             nr_max = nr.get('Max', '.')
             if nr_min not in ('.', None) and nr_max not in ('.', None):
                 if int(nr_max) < int(nr_min):
-                    nr_max = '.'   # cannot derive safely — set to missing
+                    nr_max = '.'   # cannot derive safely - set to missing
             normal_min = nr_min
             normal_max = nr_max
 
-            # IntermediateRange — Max < Min is a Stripy DB quirk
+            # IntermediateRange - Max < Min is a Stripy DB quirk
             # Fix:
             #   IF PathogenicCutoff available → IR.Max = PathogenicCutoff - 1
             #   IF PathogenicCutoff NOT available → keep IR.Max = 0 (flag for analyst)
@@ -790,14 +790,14 @@ def build_rows(
                         if path_cutoff not in ('.', None):
                             ir_max = int(path_cutoff) - 1   # derive from PC
                         else:
-                            ir_max = 0   # cannot derive — keep as 0 (analyst flag)
+                            ir_max = 0   # cannot derive - keep as 0 (analyst flag)
                 inter_min = ir_min
                 inter_max = ir_max
 
         hpo, hpo_gene = get_hpo_terms(str(disease_omim), hpo_lookup)
 
-        # /compare API — called loci only
-        # Per-allele columns — explicit, filterable, no packed '/' values
+        # /compare API - called loci only
+        # Per-allele columns - explicit, filterable, no packed '/' values
         allele1_repeats = allele2_repeats = '.'
         allele1_zscore  = allele2_zscore  = '.'
         allele1_outlier = allele2_outlier = '.'
@@ -810,7 +810,7 @@ def build_rows(
             allele1_repeats = rep1
             allele2_repeats = rep2 if rep2 is not None else '.'
 
-        # Per-allele direction — REPCN vs NormalRange (not Z-score)
+        # Per-allele direction - REPCN vs NormalRange (not Z-score)
         # HIGH: above normal max  LOW: below normal min  '.': within or unavailable
         def _rdir(a_str, nm, nx):
             if a_str in (None, '.') or nm in ('.', None) or nx in ('.', None):
@@ -823,7 +823,7 @@ def build_rows(
         allele1_dir = _rdir(rep1, normal_min, normal_max)
         allele2_dir = _rdir(rep2, normal_min, normal_max)
 
-        # CallQuality — flag ambiguous calls
+        # CallQuality - flag ambiguous calls
         # Nested/Replaced loci with GT!=0/0 but REPCN=0/0 are unreliable:
         # EH detected a variant but could not count the pathogenic motif
         call_quality = 'OK'
@@ -859,7 +859,7 @@ def build_rows(
                     allele1_outlier = fmt(raw_o)
                     allele2_outlier = fmt(raw_o) if rep2 is not None else '.'
 
-                # Literature — per-allele range
+                # Literature - per-allele range
                 lit = compare.get('Literature', {})
                 lit_entry = {}
                 if dis_id and dis_id in lit:
@@ -881,7 +881,7 @@ def build_rows(
                 print(f"    [WARN] /compare error {locus_id}: "
                       f"{compare['_error']}", file=sys.stderr)
 
-        # DeNovo assessment — per allele independently
+        # DeNovo assessment - per allele independently
         a1_denovo, a1_denovo_dir, \
         a2_denovo, a2_denovo_dir, \
         denovo_status = assess_denovo(
@@ -902,7 +902,7 @@ def build_rows(
         if a2_denovo == '.':
             a2_denovo_dir = '.'
 
-        # Rule 2: Homozygous (rep1==rep2) — Allele2 is not independent
+        # Rule 2: Homozygous (rep1==rep2) - Allele2 is not independent
         # Suppress ALL Allele2 DeNovo fields to avoid duplicating Allele1
         if rep1 is not None and rep2 is not None and str(rep1) == str(rep2):
             a2_denovo     = '.'
@@ -979,7 +979,7 @@ def print_summary(sample_id: str, rows: list, family_type: str):
     total    = len(rows)
     called   = sum(1 for r in rows if r['CallStatus'] == 'CALLED')
     no_call  = total - called
-    # Genuine expansion outliers — either allele HIGH
+    # Genuine expansion outliers - either allele HIGH
     high_out = [r for r in rows
                 if ('True' in str(r.get('Allele1_Outlier','')) or
                     'True' in str(r.get('Allele2_Outlier','')))
@@ -1066,7 +1066,7 @@ def main():
     print(f"[INFO] Locus ref  : {len(locus_ref)} loci")
     print(f"[INFO] HPO lookup : {len(hpo_lookup)} gene-disease pairs")
     print(f"[INFO] HPO filter : {len(filter_terms)} terms "
-          f"({'active' if filter_terms else 'disabled — HPO_Filtered will be .'})")
+          f"({'active' if filter_terms else 'disabled - HPO_Filtered will be .'})")
     print(f"[INFO] PED        : {len(ped)} samples")
 
     # Load parent VCFs for DeNovo

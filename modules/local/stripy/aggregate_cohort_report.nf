@@ -1,6 +1,6 @@
 /*
 ========================================================================================
-    STRIPY — AGGREGATE COHORT REPORT
+    STRIPY - AGGREGATE COHORT REPORT
 ========================================================================================
     Collect all per-sample TSV reports and generate per-family Excel workbooks.
     One Excel per family: Summary sheet + one sheet per family member.

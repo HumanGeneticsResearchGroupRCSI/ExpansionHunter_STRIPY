@@ -1,16 +1,16 @@
 /*
 ========================================================================================
-    STRIPY — FETCH LOCUS REFERENCE
+    STRIPY - FETCH LOCUS REFERENCE
 ========================================================================================
     Fetch /locus metadata from the Stripy API for all loci in the variant catalog.
-    Runs ONCE per pipeline run — result is cached and reused across all samples.
+    Runs ONCE per pipeline run - result is cached and reused across all samples.
 
     Behaviour:
       - If params.stripy_locus_ref already exists on disk → copy to work dir (fast path)
       - If not → run fetch_stripy_locus_ref.py to download from API → save permanently
 
     Output:
-      stripy_locus_reference.json   — emitted to downstream STRIPY_BUILD_SAMPLE_REPORT
+      stripy_locus_reference.json   - emitted to downstream STRIPY_BUILD_SAMPLE_REPORT
       versions.yml
 ----------------------------------------------------------------------------------------
 */
@@ -21,7 +21,7 @@ process STRIPY_FETCH_LOCUS_REF {
 
     container params.containers.python
 
-    // Not using publishDir — file is written directly to params.stripy_locus_ref
+    // Not using publishDir - file is written directly to params.stripy_locus_ref
     // by the script block below (permanent resource location)
 
     input:
@@ -39,7 +39,7 @@ process STRIPY_FETCH_LOCUS_REF {
         echo "[INFO] Copying to work directory for pipeline use"
         cp "${permanent_path}" stripy_locus_reference.json
     else
-        echo "[INFO] Locus reference not found — fetching from Stripy API"
+        echo "[INFO] Locus reference not found - fetching from Stripy API"
         python3 ${projectDir}/scripts/fetch_stripy_locus_ref.py \\
             --catalog ${variant_catalog} \\
             --output  stripy_locus_reference.json

@@ -43,10 +43,10 @@ PROBAND_FILL  = PatternFill("solid", fgColor="D6E4F0")   # light blue  ← proba
 PARENT_FILL   = PatternFill("solid", fgColor="FFFFFF")   # white       ← parent rows
 PASS_FILL         = PatternFill("solid", fgColor="E2EFDA")   # light green
 LOWDEPTH_FILL     = PatternFill("solid", fgColor="FFF2CC")   # light yellow
-OUTLIER_HIGH_FILL = PatternFill("solid", fgColor="FCE4D6")   # light orange — HIGH expansion
-OUTLIER_LOW_FILL  = PatternFill("solid", fgColor="DDEEFF")   # light blue   — LOW contraction
-DENOVO_FILL       = PatternFill("solid", fgColor="F4CCFF")   # light purple — DeNovo
-AMBIGUOUS_FILL    = PatternFill("solid", fgColor="E0E0E0")   # medium grey  — AmbiguousNestedCall
+OUTLIER_HIGH_FILL = PatternFill("solid", fgColor="FCE4D6")   # light orange - HIGH expansion
+OUTLIER_LOW_FILL  = PatternFill("solid", fgColor="DDEEFF")   # light blue   - LOW contraction
+DENOVO_FILL       = PatternFill("solid", fgColor="F4CCFF")   # light purple - DeNovo
+AMBIGUOUS_FILL    = PatternFill("solid", fgColor="E0E0E0")   # medium grey  - AmbiguousNestedCall
 NOCALL_FILL       = PatternFill("solid", fgColor="F2F2F2")   # light grey
 
 THIN_BORDER = Border(
@@ -56,7 +56,7 @@ THIN_BORDER = Border(
     bottom=Side(style='thin'),
 )
 
-# Column indices (0-based) for flagging logic — matches OUTPUT_COLUMNS order
+# Column indices (0-based) for flagging logic - matches OUTPUT_COLUMNS order
 # SampleID=0, FilterStatus=10, CallStatus=11, PopulationOutlier=30,
 # PopulationZscore_Direction=32, DeNovo=33
 COL_FILTER    = "FilterStatus"
@@ -90,7 +90,7 @@ def load_ped(ped_path: str) -> dict:
         print(f"[ERROR] PED not found: {ped_path}", file=sys.stderr)
         sys.exit(1)
 
-    # First pass — collect all sample rows
+    # First pass - collect all sample rows
     samples = {}   # sample_id → row dict
     with open(p) as f:
         for line in f:
@@ -111,7 +111,7 @@ def load_ped(ped_path: str) -> dict:
                 "phenotype":   pheno,
             }
 
-    # Second pass — group by family and identify roles
+    # Second pass - group by family and identify roles
     families = {}
     for sample_id, row in samples.items():
         fam_id = row["family_id"]
@@ -126,7 +126,7 @@ def load_ped(ped_path: str) -> dict:
         if row["phenotype"] == "2":
             families[fam_id]["proband"] = sample_id
 
-    # Proband suffix sets — used as fallback when phenotype != 2
+    # Proband suffix sets - used as fallback when phenotype != 2
     PROBAND_SUFFIXES = ('A', 'P')   # e.g. LH0003A_S6, CINDI101_EPI101SB_P
     FATHER_SUFFIXES  = ('B', 'D', 'F')
     MOTHER_SUFFIXES  = ('C', 'M')
@@ -146,13 +146,13 @@ def load_ped(ped_path: str) -> dict:
         m = re.search(r'[0-9]([A-Za-z])(?:[_\-]|$)', sample_id)
         if m:
             return m.group(1).upper()
-        # Fallback — last uppercase letter before underscore/dash/end
+        # Fallback - last uppercase letter before underscore/dash/end
         m = re.search(r'_([A-Z])(?:_|\s*$)', sample_id)
         if m:
             return m.group(1).upper()
         return ''
 
-    # Third pass — derive father/mother from proband's paternal/maternal IDs
+    # Third pass - derive father/mother from proband's paternal/maternal IDs
     # Also apply suffix-based fallback for families where proband is phenotype=0
     for fam_id, fam in families.items():
 
@@ -245,7 +245,7 @@ def is_flagged(headers: list, row: list) -> bool:
     denovo_a2 = get('Allele2_DeNovo')
     call      = get(COL_CALL)
 
-    # HIGH outlier — expansion candidate
+    # HIGH outlier - expansion candidate
     is_outlier_high = (
         call == 'CALLED' and (
             (a1_out == 'True' and a1_dir == 'HIGH') or
@@ -253,7 +253,7 @@ def is_flagged(headers: list, row: list) -> bool:
         )
     )
 
-    # LOW outlier — unusual contraction
+    # LOW outlier - unusual contraction
     is_outlier_low = (
         call == 'CALLED' and (
             (a1_out == 'True' and a1_dir == 'LOW') or
@@ -350,22 +350,22 @@ def write_legend(wb):
     legend = [
         ("COLOUR LEGEND",  None,             True,  ""),
         ("Purple",         DENOVO_FILL,       False, "De Novo candidate (Yes or Possible)"),
-        ("Orange",         OUTLIER_HIGH_FILL, False, "Population outlier — HIGH direction (expansion above normal range)"),
-        ("Blue",           OUTLIER_LOW_FILL,  False, "Population outlier — LOW direction (contraction below normal range)"),
-        ("Grey",           AMBIGUOUS_FILL,    False, "Ambiguous call — Nested/Replaced locus with REPCN=0/0 (treat with caution)"),
-        ("Green",          PASS_FILL,         False, "Called locus — PASS filter, within normal range"),
-        ("Yellow",         LOWDEPTH_FILL,     False, "Called locus — LowDepth filter (low coverage)"),
-        ("Light grey",     NOCALL_FILL,       False, "No-call locus — EH could not genotype (REPCN=./.)"),
+        ("Orange",         OUTLIER_HIGH_FILL, False, "Population outlier - HIGH direction (expansion above normal range)"),
+        ("Blue",           OUTLIER_LOW_FILL,  False, "Population outlier - LOW direction (contraction below normal range)"),
+        ("Grey",           AMBIGUOUS_FILL,    False, "Ambiguous call - Nested/Replaced locus with REPCN=0/0 (treat with caution)"),
+        ("Green",          PASS_FILL,         False, "Called locus - PASS filter, within normal range"),
+        ("Yellow",         LOWDEPTH_FILL,     False, "Called locus - LowDepth filter (low coverage)"),
+        ("Light grey",     NOCALL_FILL,       False, "No-call locus - EH could not genotype (REPCN=./.)"),
         ("CallQuality",    None,              True,  ""),
-        ("OK",             None,              False, "Called locus — genotype is reliable"),
-        ("NoCall",         NOCALL_FILL,       False, "No-call locus — REPCN=./."),
+        ("OK",             None,              False, "Called locus - genotype is reliable"),
+        ("NoCall",         NOCALL_FILL,       False, "No-call locus - REPCN=./."),
         ("AmbiguousNestedCall", AMBIGUOUS_FILL, False,
-         "Nested/Imperfect GCN locus with GT!=0/0 but REPCN=0 — EH detected variant but could not count pathogenic motif"),
+         "Nested/Imperfect GCN locus with GT!=0/0 but REPCN=0 - EH detected variant but could not count pathogenic motif"),
         ("DeNovo values",  None,              True,  ""),
-        ("Yes",            DENOVO_FILL,       False, "De novo — allele outside normal range, absent in both parents (TRIO)"),
-        ("No",             None,              False, "Inherited — at least one parent carries allele in same direction"),
-        ("Possible",       DENOVO_FILL,       False, "Possibly de novo — allele outside normal range, absent in available parent (DUO)"),
-        (".",              None,              False, "Not assessed — allele within normal range, or insufficient parent data"),
+        ("Yes",            DENOVO_FILL,       False, "De novo - allele outside normal range, absent in both parents (TRIO)"),
+        ("No",             None,              False, "Inherited - at least one parent carries allele in same direction"),
+        ("Possible",       DENOVO_FILL,       False, "Possibly de novo - allele outside normal range, absent in available parent (DUO)"),
+        (".",              None,              False, "Not assessed - allele within normal range, or insufficient parent data"),
     ]
 
     for i, (label, fill, bold, desc) in enumerate(legend, start=1):
@@ -433,7 +433,7 @@ def write_sheet(ws, headers: list, rows: list, freeze: bool = True):
 
 def write_summary_sheet(ws, headers: list, proband_rows: list):
     """
-    Write Summary sheet — proband flagged rows only.
+    Write Summary sheet - proband flagged rows only.
     Subset of columns most relevant for clinical review.
     """
     summary_cols = [
@@ -465,7 +465,7 @@ def write_summary_sheet(ws, headers: list, proband_rows: list):
     ws.row_dimensions[1].height = 30
 
     # Flagged rows only
-    # Filter flagged rows — exclude empty/blank rows and non-flagged rows
+    # Filter flagged rows - exclude empty/blank rows and non-flagged rows
     locus_idx = headers.index('Locus') if 'Locus' in headers else None
     flagged = [
         r for r in proband_rows
@@ -516,7 +516,7 @@ def write_family_excel(
     # Must have proband TSV at minimum
     proband_tsv = find_tsv(tsv_dir, proband_id)
     if proband_tsv is None:
-        print(f"  [WARN] Proband TSV not found for {proband_id} — skipping family")
+        print(f"  [WARN] Proband TSV not found for {proband_id} - skipping family")
         return False
 
     proband_headers, proband_rows = parse_tsv(proband_tsv)
@@ -621,7 +621,7 @@ def main():
         mother_id  = fam["mother"]
 
         if not proband_id:
-            print(f"  [WARN] No proband (phenotype=2) found for family {family_id} — skipping")
+            print(f"  [WARN] No proband (phenotype=2) found for family {family_id} - skipping")
             skipped += 1
             continue
 

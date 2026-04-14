@@ -5,7 +5,7 @@
 
     Input BAM: mini-BAM extracted by SAMTOOLS_EXTRACT_REGIONS
                (only repeat-locus-covering reads, ~50-100MB)
-    Mode:      seeking — required to produce realigned BAM for REViewer
+    Mode:      seeking - required to produce realigned BAM for REViewer
 */
 
 process EXPANSIONHUNTER {
@@ -14,7 +14,7 @@ process EXPANSIONHUNTER {
 
     container "${params.containers.expansionhunter}"
 
-    // Publish VCF and JSON — the final deliverables from EH
+    // Publish VCF and JSON - the final deliverables from EH
     // The unsorted realigned BAM is NOT published here:
     //   - it cannot be indexed (unsorted) → no scientific use
     //   - it is passed via channel to SAMTOOLS_INDEX_REALIGNED
@@ -62,7 +62,7 @@ process EXPANSIONHUNTER {
         --analysis-mode     ${params.analysis_mode}
 
     # NOTE: realigned BAM indexing is handled downstream by SAMTOOLS_INDEX_REALIGNED
-    # using the samtools container — expansionhunter.sif does not include samtools
+    # using the samtools container - expansionhunter.sif does not include samtools
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

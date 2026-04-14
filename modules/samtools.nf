@@ -2,8 +2,8 @@
 ========================================================================================
     SAMTOOLS MODULES
 ========================================================================================
-    SAMTOOLS_INDEX            — index BAM files if .bai is missing
-    SAMTOOLS_EXTRACT_REGIONS  — extract repeat-locus reads into mini-BAM
+    SAMTOOLS_INDEX            - index BAM files if .bai is missing
+    SAMTOOLS_EXTRACT_REGIONS  - extract repeat-locus reads into mini-BAM
                                 for hybrid seeking mode (WES optimisation)
 ----------------------------------------------------------------------------------------
 */
@@ -43,7 +43,7 @@ process SAMTOOLS_EXTRACT_REGIONS {
 
     container "${params.containers.samtools}"
 
-    // Do not publishDir — mini-BAM is an intermediate file
+    // Do not publishDir - mini-BAM is an intermediate file
     // Realigned BAM from EH is the useful output
 
     input:
@@ -58,7 +58,7 @@ process SAMTOOLS_EXTRACT_REGIONS {
     """
     # Extract reads overlapping repeat loci (with padding) into a mini-BAM
     # This reduces the BAM from ~5-15GB to ~50-100MB for WES data
-    # EH seeking mode on this mini-BAM is fast — no index-jumping overhead
+    # EH seeking mode on this mini-BAM is fast - no index-jumping overhead
     samtools view \\
         -b \\
         -L ${regions_bed} \\
@@ -70,7 +70,7 @@ process SAMTOOLS_EXTRACT_REGIONS {
     # The || true prevents failure if index was already written
     [ -f "${meta.id}.regions.bam.bai" ] || samtools index ${meta.id}.regions.bam
 
-    # Sanity check — mini-BAM must have reads
+    # Sanity check - mini-BAM must have reads
     N_READS=\$(samtools view -c ${meta.id}.regions.bam)
     if [ "\${N_READS}" -eq "0" ]; then
         echo "[ERROR] Mini-BAM has 0 reads for ${meta.id}" >&2
@@ -99,7 +99,7 @@ process SAMTOOLS_EXTRACT_REGIONS {
 
 // ── SAMTOOLS_INDEX_REALIGNED ──────────────────────────────────────────────────
 // Index the realigned BAM produced by ExpansionHunter seeking mode.
-// Runs in samtools container — expansionhunter.sif does not include samtools.
+// Runs in samtools container - expansionhunter.sif does not include samtools.
 // Optional: only runs when realigned BAM exists (seeking mode).
 
 process SAMTOOLS_INDEX_REALIGNED {
@@ -126,7 +126,7 @@ process SAMTOOLS_INDEX_REALIGNED {
 
     script:
     // ExpansionHunter realigned BAM is NOT coordinate-sorted (graph-alignment order).
-    // Must sort before indexing — samtools index will fail on unsorted input.
+    // Must sort before indexing - samtools index will fail on unsorted input.
     // TMPDIR is set to node-local scratch by SLURM on RCSI HPC.
     """
     samtools sort \\
