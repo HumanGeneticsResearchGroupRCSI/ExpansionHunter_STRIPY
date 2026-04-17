@@ -424,3 +424,9 @@ deepakbharti@rcsi.ie
 ---
 
 *Pipeline developed for the Epilepsy Project, RCSI  April 2026*
+
+---
+---
+Please visit https://github.com/Deep2106/BUILD_SINGULARITY_IMAGES/tree/main for more information about containers used.
+---
+---
